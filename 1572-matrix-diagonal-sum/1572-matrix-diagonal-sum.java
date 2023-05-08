@@ -8,6 +8,6 @@ class Solution {
                 sum+=mat[i][mat.length-i-1];
             }
         }
-        return sum;
+        return sum;//TC-O(n), Space Complexity-O(1) 
     }
 }
