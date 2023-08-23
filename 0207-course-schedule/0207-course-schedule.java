@@ -1,43 +1,39 @@
 class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        Map<Integer, List<Integer>> mp = new HashMap<>();
-        for (int[] pre : prerequisites) {
-            if (!mp.containsKey(pre[0])) {
-                mp.put(pre[0], new ArrayList<>());
-            }
-            mp.get(pre[0]).add(pre[1]);
+    public boolean canFinish(int n, int[][] pre) {
+        ArrayList<ArrayList<Integer>> adj=new ArrayList<>(n);
+        for(int i=0;i<n;i++)
+        {
+            adj.add(new ArrayList<>());
         }
-        
-        int[] bl = new int[numCourses];
-        for (int[] pre : prerequisites) {
-            int a = pre[0];
-            if (bl[a] == 0) {
-                if (test(a, mp, bl)) {
-                    return false;
+        int[] in=new int[n];
+        for(int i=0;i<pre.length;i++)
+        {      in[pre[i][1]]++;
+                adj.get(pre[i][0]).add(pre[i][1]);
+        }
+        Queue<Integer> q=new LinkedList<>();
+        for(int i=0;i<n;i++)
+        {
+            if(in[i]==0)
+            {
+                q.add(i);
+            }
+        }
+        int count=0;
+        while(!q.isEmpty())
+        {
+            count++;
+            int temp=q.poll();
+            for(int i:adj.get(temp))
+            {
+                in[i]--;
+                if(in[i]==0)
+                {
+                    q.add(i);
                 }
             }
         }
-        return true;
-    }
-    
-    private boolean test(int ind, Map<Integer, List<Integer>> mp, int[] bl) {
-        if (bl[ind] == 1) {
-            return true;
-        }
-        if (bl[ind] == 2) {
-            return false;
-        }
-        bl[ind] = 1;
-        
-        if (mp.containsKey(ind)) {
-            for (int i : mp.get(ind)) {
-                if (test(i, mp, bl)) {
-                    return true;
-                }
-            }
-        }
-        
-        bl[ind] = 2;
+        if(count==n) return true;
         return false;
+        
     }
 }
